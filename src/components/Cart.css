@@ -1,0 +1,49 @@
+.cart-page {
+    background-color: white;
+    padding-bottom: 80px;
+    font-family: 'Open Sans', sans-serif;
+    min-height: 50vh;
+}
+
+.header-breadcrumbs-cart {
+    padding: 20px 0;
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.cart-content-centered {
+    text-align: center;
+    margin-top: 40px;
+    padding: 0 20px;
+}
+
+.cart-content-centered h1 {
+    font-size: 2rem;
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.empty-cart-message {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.empty-cart-message p {
+    margin: 5px 0;
+}
+
+.continue-link {
+    color: #666;
+}
+
+.continue-link a {
+    color: #d50055;
+    text-decoration: none;
+}
+
+.continue-link a:hover {
+    text-decoration: underline;
+}

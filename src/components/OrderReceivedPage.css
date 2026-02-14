@@ -1,0 +1,200 @@
+/* OrderReceivedPage.css */
+
+.order-received-container {
+    padding-top: 20px;
+    padding-bottom: 80px;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+.order-breadcrumb {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.order-breadcrumb .separator {
+    margin: 0 8px;
+    font-size: 0.7rem;
+}
+
+.order-breadcrumb .current {
+    font-weight: 600;
+    color: #333;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 40px;
+    color: #444;
+}
+
+.thank-you-box {
+    margin-bottom: 40px;
+}
+
+.thank-you-box p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+.order-meta-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.95rem;
+    color: #555;
+    padding-left: 15px;
+}
+
+.order-meta-list li {
+    display: list-item;
+    list-style-type: disc;
+}
+
+.order-meta-list strong {
+    color: #333;
+    font-weight: 700;
+}
+
+/* Bank Details */
+.bank-details-section {
+    margin-top: 40px;
+    margin-bottom: 50px;
+}
+
+.bank-details-section>p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.bank-details-section h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    margin-top: 0;
+    border-bottom: 2px solid #ccc;
+    /* Underline style from screenshot */
+    display: inline-block;
+    padding-bottom: 8px;
+    min-width: 200px;
+}
+
+.bank-info-block h3 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.bank-separator {
+    width: 200px;
+    height: 2px;
+    background: #ccc;
+    margin-bottom: 15px;
+}
+
+.bank-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.bank-list li {
+    margin-bottom: 5px;
+}
+
+/* Order Details Table */
+.order-details-section {
+    margin-bottom: 50px;
+}
+
+.order-details-section h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+    display: inline-block;
+    padding-bottom: 8px;
+    min-width: 200px;
+}
+
+.confirmation-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.confirmation-table th {
+    text-align: left;
+    padding: 12px 0;
+    font-weight: 700;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    width: 40%;
+}
+
+.confirmation-table td {
+    text-align: left;
+    padding: 12px 0;
+    color: #555;
+    border-bottom: 1px solid #eee;
+}
+
+.confirmation-table small {
+    display: block;
+    color: #999;
+}
+
+.invoice-btn {
+    background: #e0e0e0;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+/* Address Grid */
+.customer-details-grid {
+    display: flex;
+    gap: 40px;
+}
+
+.details-col {
+    flex: 1;
+}
+
+.details-col h2 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ccc;
+    display: inline-block;
+    padding-bottom: 8px;
+    min-width: 200px;
+}
+
+.details-col address {
+    font-style: normal;
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .customer-details-grid {
+        flex-direction: column;
+        gap: 20px;
+    }
+}

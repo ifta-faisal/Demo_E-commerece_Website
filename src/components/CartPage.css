@@ -1,0 +1,285 @@
+/* CartPage.css */
+
+.cart-page-container {
+    padding-top: 20px;
+    padding-bottom: 60px;
+}
+
+.cart-breadcrumb {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.cart-breadcrumb .separator {
+    margin: 0 5px;
+    font-size: 0.8rem;
+}
+
+.cart-breadcrumb .current {
+    font-weight: 600;
+    color: #333;
+}
+
+.cart-page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 50px;
+    color: #333;
+}
+
+.cart-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+}
+
+.cart-content {
+    flex: 1;
+    min-width: 60%;
+}
+
+/* Cart Table Styling */
+.cart-table-header {
+    display: flex;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #666;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.cart-item-row {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+
+.col-remove {
+    width: 40px;
+    text-align: center;
+}
+
+.col-thumb {
+    width: 80px;
+    padding: 0 10px;
+}
+
+.col-product {
+    flex: 1;
+    padding: 0 10px;
+    color: #555;
+}
+
+.col-price {
+    width: 100px;
+    text-align: right;
+    color: #555;
+}
+
+.col-qty {
+    width: 120px;
+    text-align: center;
+}
+
+.col-subtotal {
+    width: 120px;
+    text-align: right;
+    font-weight: 600;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.remove-btn:hover {
+    color: #ff0000;
+}
+
+.col-thumb img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border: 1px solid #eee;
+}
+
+.qty-input input {
+    width: 50px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* Actions Row */
+.cart-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.coupon-section {
+    display: flex;
+    gap: 10px;
+}
+
+.coupon-input {
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    width: 200px;
+    outline: none;
+}
+
+.apply-coupon-btn {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-weight: 600;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.apply-coupon-btn:hover {
+    background: #d50055;
+}
+
+.update-cart-btn {
+    background: #f0f0f0;
+    border: none;
+    padding: 10px 20px;
+    color: #aaa;
+    cursor: not-allowed;
+    margin-right: 15px;
+    font-weight: 500;
+    border-radius: 20px;
+    /* Screenshot style */
+}
+
+.checkout-btn {
+    background: #000;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.checkout-btn:hover {
+    background: #d50055;
+}
+
+/* Cart Totals Sidebar */
+.cart-totals-sidebar {
+    width: 400px;
+    padding: 0 0 20px 20px;
+}
+
+.cart-totals-sidebar h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 400;
+}
+
+.totals-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+}
+
+.totals-row .label {
+    font-weight: 600;
+    color: #333;
+}
+
+.totals-row .value {
+    color: #555;
+}
+
+.shipping-section {
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.shipping-section .label {
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.shipping-options {
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.shipping-option label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.shipping-option .price {
+    margin-left: auto;
+}
+
+.shipping-note {
+    font-size: 0.8rem;
+    color: #777;
+    margin-top: 10px;
+}
+
+.calc-shipping-link {
+    font-size: 0.85rem;
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    display: block;
+    margin-top: 10px;
+}
+
+.total-final {
+    border-bottom: none;
+    margin-top: 10px;
+    align-items: flex-start;
+}
+
+.total-final .value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.tax-note {
+    font-size: 0.7rem;
+    color: #777;
+    font-weight: 400;
+}

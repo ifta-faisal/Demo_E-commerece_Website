@@ -1,0 +1,213 @@
+.hero-section {
+    padding: 20px 0 30px;
+}
+
+.hero-grid {
+    display: grid;
+    /* Explicitly use 2 columns */
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 450px;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.hero-item {
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.hero-item:hover {
+    transform: translateY(-3px);
+}
+
+.hero-item.main {
+    /* Span ONLY the first column */
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+}
+
+.hero-item.side {
+    /* Span ONLY the second column */
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    background-color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    /* Crucial for absolute positioned children */
+}
+
+/* Main Hero Content */
+.main-content {
+    position: relative;
+    padding: 40px;
+    color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 2;
+}
+
+.stay-in-air {
+    background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+}
+
+.stay-in-air::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* Ensure background image covers */
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4;
+    mix-blend-mode: soft-light;
+    z-index: 1;
+}
+
+.main-content h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.main-content p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.4;
+    opacity: 0.95;
+    max-width: 60%;
+}
+
+.special-badge {
+    display: inline-block;
+    background: #00d2ff;
+    color: #000;
+    padding: 5px 10px;
+    font-weight: 800;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.mini-logo-white {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mini-logo-white img {
+    width: 28px;
+}
+
+/* Side Hero Content */
+.side-content {
+    padding: 35px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    /* Located above image overlay */
+}
+
+.side-content h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+}
+
+.side-content h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: white;
+}
+
+/* Secondary Grid Section */
+.secondary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: 380px;
+    gap: 15px;
+}
+
+.grid-item {
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.grid-item h2 {
+    font-size: 2rem;
+    font-weight: 500;
+    color: white;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.grid-item p {
+    font-size: 1rem;
+    color: white;
+    opacity: 0.95;
+    margin-top: 8px;
+}
+
+.grid-subitems {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 15px;
+}
+
+.sub-promo-card {
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.sub-promo-card h3 {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 992px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .secondary-grid {
+        grid-template-columns: 1fr;
+    }
+}

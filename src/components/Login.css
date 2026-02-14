@@ -1,0 +1,145 @@
+.login-page {
+    /* Full screen centering background */
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.login-container {
+    background: white;
+    width: 100%;
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.login-header {
+    margin-bottom: 30px;
+}
+
+.login-step-content {
+    /* Animations could appear here */
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.sub-text {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Buttons */
+.btn-shop-pay {
+    width: 100%;
+    background: #5a31f4;
+    /* Shop purple */
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.2s;
+}
+
+.btn-shop-pay:hover {
+    background: #4c28d4;
+}
+
+.shop-text {
+    font-family: sans-serif;
+    letter-spacing: -1px;
+    font-weight: 800;
+}
+
+.divider {
+    position: relative;
+    margin: 20px 0;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background: #eee;
+}
+
+.divider::before {
+    left: 0;
+}
+
+.divider::after {
+    right: 0;
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    /* Yellowish border in screenshot? Actually standard grey/orange focused. */
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    color: #333;
+}
+
+.input-group input:focus {
+    border-color: #d50055;
+    /* NewBeeDrone Orange focus */
+    box-shadow: 0 0 0 1px #d50055;
+}
+
+.btn-continue {
+    width: 100%;
+    background: #d50055;
+    /* Screenshot orange/gold */
+    color: #222;
+    /* Dark text on orange */
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-continue:hover {
+    background: #b00046;
+}
+
+.back-link {
+    margin-top: 20px;
+    color: #d50055;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}

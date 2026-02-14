@@ -1,0 +1,118 @@
+.free-offers-page {
+    font-family: 'Open Sans', sans-serif;
+    color: #333;
+    padding-bottom: 80px;
+    background: white;
+}
+
+/* Page Header */
+.page-header-simple {
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.breadcrumb-simple {
+    font-size: 0.75rem;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.breadcrumb-simple span {
+    margin: 0 5px;
+}
+
+.page-title-row {
+    text-align: center;
+    padding: 30px 0;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 40px;
+}
+
+.page-title-row h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+/* Content */
+.content-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+    /* Generally centered text based on screenshot */
+}
+
+.content-subtitle {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.content-text {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 25px;
+    text-align: left;
+    /* Text blocks are left-aligned or justified usually, but screenshot looks left-ish with centered layout? 
+    Actually, let's look closer. The title "Free Offers by Dollar Amount" is centered.
+    The paragraphs are left-aligned in a centered container. */
+}
+
+.highlight-box {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.highlight-box h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.highlight-sub {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.offer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 40px;
+}
+
+.offer-link {
+    color: #d50055;
+    text-decoration: underline;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.offer-link:hover {
+    color: #b00046;
+}
+
+.instruction-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #444;
+    margin-top: 30px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cart-icon-inline {
+    width: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+    opacity: 0.5;
+}

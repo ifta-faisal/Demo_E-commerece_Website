@@ -1,0 +1,358 @@
+/* Page Layout & Background */
+.product-listing-page {
+    background-color: #FAFAFA;
+    /* Very light grey */
+    padding-bottom: 50px;
+    font-family: "Open Sans", sans-serif;
+    /* Guessing font */
+}
+
+.page-header-centered {
+    padding: 30px 0 20px;
+    text-align: center;
+    background: #FAFAFA;
+}
+
+.page-header-centered h1 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.breadcrumb {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 10px;
+}
+
+.main-layout {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+.collection-title-row {
+    margin-bottom: 20px;
+    padding-left: 0;
+}
+
+.collection-title-row h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #444;
+    margin: 0;
+}
+
+/* Toolbar Full Width */
+.toolbar-full-width {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    background: transparent;
+    /* Or transparent if sitting on page bg */
+    margin-bottom: 30px;
+}
+
+.view-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.view-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #ccc;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.view-btn.active {
+    color: #333;
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.sort-dropdown {
+    cursor: pointer;
+    font-weight: 600;
+    color: #444;
+}
+
+.chevron {
+    color: #d50055;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Content Row (Sidebar + Grid) */
+.content-row {
+    display: flex;
+    gap: 40px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    flex-shrink: 0;
+}
+
+.filter-group {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.filter-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.filter-options {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.filter-options li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: #666;
+    cursor: pointer;
+}
+
+.filter-options li:hover {
+    color: #d50055;
+}
+
+.checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-wrap input[type="checkbox"] {
+    accent-color: #d50055;
+}
+
+.count {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+/* Main Content */
+.product-grid-wrapper {
+    flex: 1;
+}
+
+/* Product Grid */
+/* Grid Layout */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+}
+
+/* Product Info Alignment */
+.product-card {
+    background: transparent;
+    padding: 0;
+    text-align: center;
+    border: none;
+    transition: none;
+    /* Screenshot looks clean, no border hover maybe? Or very subtle. */
+}
+
+.product-card:hover {
+    box-shadow: none;
+    /* Removing lift for now to match flat look */
+}
+
+/* Badges */
+.sold-out-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: white;
+    border: 1px solid #d50055;
+    color: #d50055;
+    font-size: 0.55rem;
+    font-weight: 700;
+    padding: 3px 6px;
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+.old-sale-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #d50055;
+    border: 1px solid #d50055;
+    color: white;
+    font-size: 0.55rem;
+    font-weight: 700;
+    padding: 3px 6px;
+    text-transform: uppercase;
+    z-index: 10;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.product-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    color: #333;
+    height: 40px;
+    overflow: hidden;
+    /* Ensure it doesn't look too bold */
+}
+
+.product-vendor {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.product-price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #d50055;
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #ccc;
+    font-size: 0.85rem;
+    margin-left: 8px;
+    font-weight: 400;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    /* Tighter gap */
+    margin-top: 50px;
+    align-items: center;
+}
+
+.page-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e0e0e0;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.page-btn.active {
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid #d50055;
+    width: auto;
+    height: auto;
+    padding: 0 5px;
+    color: #d50055;
+}
+
+.page-btn.number-btn {
+    border: none;
+    background: none;
+    width: auto;
+    height: auto;
+    padding: 0 10px;
+    border-radius: 0;
+}
+
+.page-btn.arrow-btn {
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    color: #666;
+}
+
+.page-btn.arrow-btn:hover {
+    border-color: #d50055;
+    color: #d50055;
+}
+
+.page-btn:not(.arrow-btn):hover {
+    color: #d50055;
+}
+
+.page-dots {
+    color: #666;
+    letter-spacing: 2px;
+    padding: 0 5px;
+}
+
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .listing-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+}
