@@ -120,11 +120,14 @@ exports.seedProductsFromCsv = (filePath) => {
     fs.createReadStream(filePath)
         .pipe(csv())
         .on('data', (data) => {
-            // Helper to get case-insensitive value
+            // Helper to get case-insensitive value, prioritizing specific column names
             const keys = Object.keys(data);
             const getValue = (candidates) => {
-                const key = keys.find(k => candidates.includes(k.toLowerCase().trim()));
-                return key ? data[key] : null;
+                for (const candidate of candidates) {
+                    const key = keys.find(k => k.toLowerCase().trim() === candidate);
+                    if (key && data[key] && data[key].trim() !== '') return data[key];
+                }
+                return null;
             }
 
             const name = getValue(['name', 'title', 'product name', 'item name']);
@@ -132,6 +135,7 @@ exports.seedProductsFromCsv = (filePath) => {
             if (!priceVal || isNaN(parseFloat(priceVal))) {
                 priceVal = getValue(['price', 'regular price', 'amount', 'cost']);
             }
+            // Prioritize main description over short description
             const description = getValue(['description', 'desc', 'details', 'short description']);
             const stock = getValue(['stock', 'quantity', 'inventory']);
             const sku = getValue(['sku', 'id', 'product id']);
@@ -140,7 +144,9 @@ exports.seedProductsFromCsv = (filePath) => {
             const vendor = detectVendor(data, getValue);
             const category = detectCategory(data, getValue);
 
-            let image = getValue(['images', 'image', 'photo']);
+            // Intelligent Image Detection
+            // Common CSV headers: 'Image Src', 'Variant Image', 'Featured Image', 'Image', 'Photo'
+            let image = getValue(['image src', 'variant image', 'featured image', 'images', 'image', 'photo', 'img', 'picture']);
 
             // Fallback: Scan ALL values for an image URL if column lookup failed
             if (!image) {
@@ -159,13 +165,175 @@ exports.seedProductsFromCsv = (filePath) => {
             let allImages = [];
 
             if (image) {
-                // Determine split char (comma is standard)
-                if (image.includes(',')) {
-                    allImages = image.split(',').map(i => i.trim()).filter(i => i.length > 0);
-                    mainImage = allImages[0];
+                // Determine split char (comma, semicolon, pipe, space if multiple urls?)
+                if (/[,\n;|]/.test(image)) {
+                    allImages = image.split(/[,\n;|]/).map(i => i.trim()).filter(i => i.length > 0 && (i.startsWith('http') || i.startsWith('/')));
+                    if (allImages.length > 0) mainImage = allImages[0];
+                    else mainImage = image; // fallback
                 } else {
                     mainImage = image;
                     allImages = [image];
+                }
+            }
+
+            // Image Fallback: If still empty, use placeholder
+            if (!mainImage || mainImage.length < 5) {
+                const shortName = name ? name.split(' ').slice(0, 3).join('+') : 'Product';
+                mainImage = `https://placehold.co/600x400/EEE/31343C?font=lora&text=${shortName}`;
+                allImages = [mainImage];
+            }
+
+            // CLEAN AND FORMAT DESCRIPTION
+            let cleanDescription = description || '';
+
+            // Helper to clean and format text
+            const formatDescription = (desc) => {
+                if (!desc) return '';
+                let d = desc.trim();
+
+                // 1. GLOBAL CLEANUP (Fixes \n artifacts and duplicate titles)
+                d = d.replace(/&nbsp;ass="[^"]*">/g, '');
+                d = d.replace(/<span[^>]*>/g, '').replace(/<\/span>/g, '');
+                d = d.replace(/\\\\n/g, '\n').replace(/\\n/g, '\n').replace(/\\r/g, '');
+
+                // Remove duplicate title if it appears at the start (ignoring case)
+                // Remove duplicate title if it appears at the start (ignoring case)
+                // We handle potential HTML tags wrapping the title as well.
+                let cleanName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape regex chars
+
+                // Regex: Matches start of string, optional whitespace/newlines/tags, then the Name, then optional closing tags/newlines
+                // We make it loop twice to check for double headers.
+                for (let i = 0; i < 3; i++) {
+                    const titleRegex = new RegExp(`^\\s*(?:<(?:div|h[1-6]|p|b|strong|span)[^>]*>\\s*)*${cleanName}\\s*(?:<\/(?:div|h[1-6]|p|b|strong|span)>\\s*)*(?:<br\\s*\/?>|\\n)*`, 'i');
+                    if (titleRegex.test(d)) {
+                        d = d.replace(titleRegex, '').trim();
+                    } else {
+                        break;
+                    }
+                }
+
+                // If mostly HTML already, just return as is (but maybe strip title if present)
+                if (d.includes('<ul') || d.includes('<div') || d.includes('<table') || d.includes('<h')) {
+                    return d;
+                }
+
+                // If it looks like plain text or partial HTML
+                // Remove initial garbage like "&nbsp;ass=..."
+                d = d.replace(/&nbsp;ass="[^"]*">/g, '');
+                d = d.replace(/<span[^>]*>/g, '').replace(/<\/span>/g, '');
+
+                // Decode literal "\n" and "\\n" to actual newlines
+                // Handle multiple variations of escaped newlines common in CSVs
+                d = d.replace(/\\\\n/g, '\n'); // Double backslash n
+                d = d.replace(/\\n/g, '\n');   // Single backslash n
+                d = d.replace(/\\r/g, '');     // Remove literal \r
+
+                // Splitlines
+                let lines = d.split(/\n|<br>|<br\/>/).map(l => l.trim()).filter(l => l);
+
+                // Remove lines if they match the product name (duplicate title)
+                // Use while to remove MULTIPLE duplicate headers if present
+                cleanName = name.trim().toLowerCase();
+                while (lines.length > 0) {
+                    const lineLower = lines[0].toLowerCase();
+                    // Check if line is roughly equal to name, or contained in name, or name contains line (if line is long enough)
+                    if (lineLower === cleanName || (lineLower.length > 10 && cleanName.includes(lineLower)) || (lineLower.length > 10 && lineLower.includes(cleanName))) {
+                        lines.shift();
+                    } else if (lineLower === '\\n' || lineLower === '"' || lineLower.replace(/\\/g, '') === 'n') {
+                        // Also remove lines that are just artifacts like "\n" or quotes
+                        lines.shift();
+                    } else {
+                        break;
+                    }
+                }
+
+                let formatted = '';
+                let inList = false;
+                let hasFeaturesHeader = false;
+                let hasDetailsHeader = false;
+
+                lines.forEach((line, index) => {
+                    // Check common "Features" headers in text
+                    if (line.toLowerCase() === 'features' || line.toLowerCase() === 'features:') {
+                        if (inList) { formatted += '</ul>'; inList = false; }
+                        if (!hasFeaturesHeader) {
+                            formatted += '<h3>Features</h3>';
+                            hasFeaturesHeader = true;
+                        }
+                        return; // Skip adding the line itself
+                    }
+
+                    // Check for bullet points
+                    if (line.startsWith('-') || line.startsWith('•') || line.startsWith('*')) {
+                        if (!inList) {
+                            if (!hasFeaturesHeader) {
+                                formatted += '<h3>Features</h3>';
+                                hasFeaturesHeader = true;
+                            }
+                            formatted += '<ul>';
+                            inList = true;
+                        }
+                        // Remove the bullet char
+                        let listContent = line.substring(1).trim();
+                        if (listContent) formatted += `<li>${listContent}</li>`;
+                    }
+                    // Check for Key: Value patterns (Specifications)
+                    else if (line.includes(':') && line.length < 100 && !line.includes('http') && !line.endsWith(':')) {
+                        if (inList) {
+                            formatted += '</ul>';
+                            inList = false;
+                        }
+
+                        if (!hasDetailsHeader) {
+                            formatted += '<h3>Product Details</h3>';
+                            hasDetailsHeader = true;
+                        }
+
+                        const parts = line.split(':');
+                        const key = parts[0].trim();
+                        const val = parts.slice(1).join(':').trim();
+
+                        formatted += `<div class="spec-row"><strong>${key}:</strong> ${val}</div>`;
+                    }
+                    // Normal text paragraph
+                    else {
+                        if (inList) {
+                            formatted += '</ul>';
+                            inList = false;
+                        }
+                        // If line is just "Product Details" or similar
+                        if (line.toLowerCase().includes('product details') || line.toLowerCase().includes('specifications')) {
+                            // Treat as header check
+                            if (!hasDetailsHeader) {
+                                formatted += '<h3>Product Details</h3>';
+                                hasDetailsHeader = true;
+                            }
+                        } else {
+                            // avoid printing just "\n"
+                            if (line.trim() !== '\\n') {
+                                formatted += `<p>${line}</p>`;
+                            }
+                        }
+                    }
+                });
+
+                if (inList) formatted += '</ul>';
+                return formatted;
+            };
+
+            cleanDescription = formatDescription(cleanDescription);
+
+
+            // PARSE SPECIFICATIONS (Attributes)
+            const specifications = {};
+            // Look for "Attribute X name" and "Attribute X value(s)"
+            // We'll scan up to 20 attributes to be safe
+            for (let i = 1; i <= 20; i++) {
+                const nameKey = getValue([`attribute ${i} name`]);
+                const valKey = getValue([`attribute ${i} value(s)`]);
+
+                if (nameKey && valKey && nameKey.trim() && valKey.trim()) {
+                    specifications[nameKey.trim()] = valKey.trim();
                 }
             }
 
@@ -176,13 +344,14 @@ exports.seedProductsFromCsv = (filePath) => {
                 results.push({
                     name: name,
                     price: parseFloat(priceVal),
-                    description: description || '',
+                    description: cleanDescription,
                     category: category || 'Uncategorized',
                     vendor: vendor || '',
                     stock: stockCount,
                     sku: sku || `SKU-${Date.now()}-${Math.random()}`,
                     imageUrl: mainImage || '',
-                    images: allImages
+                    images: allImages,
+                    specifications: specifications
                 });
             }
         })
@@ -213,11 +382,14 @@ exports.uploadProducts = (req, res) => {
     fs.createReadStream(req.file.path)
         .pipe(csv())
         .on('data', (data) => {
-            // Helper to get case-insensitive value
+            // Helper to get case-insensitive value, prioritizing specific column names
             const keys = Object.keys(data);
             const getValue = (candidates) => {
-                const key = keys.find(k => candidates.includes(k.toLowerCase().trim()));
-                return key ? data[key] : null;
+                for (const candidate of candidates) {
+                    const key = keys.find(k => k.toLowerCase().trim() === candidate);
+                    if (key && data[key] && data[key].trim() !== '') return data[key];
+                }
+                return null;
             }
 
             const name = getValue(['name', 'title', 'product name', 'item name']);
@@ -231,20 +403,149 @@ exports.uploadProducts = (req, res) => {
             const description = getValue(['description', 'desc', 'details', 'short description']);
             const stock = getValue(['stock', 'quantity', 'inventory', 'in stock?']);
             const sku = getValue(['sku', 'id', 'product id']);
-            const image = getValue(['images', 'image', 'photo']);
+            const image = getValue(['image src', 'variant image', 'featured image', 'images', 'image', 'photo', 'img', 'picture']);
+
+            // CLEAN AND FORMAT DESCRIPTION
+            let cleanDescription = description || '';
+
+            // Helper to clean and format text
+            const formatDescription = (desc) => {
+                if (!desc) return '';
+                let d = desc.trim();
+
+                // If mostly HTML already, just return as is (but maybe strip title if present)
+                if (d.includes('<ul') || d.includes('<div') || d.includes('<table') || d.includes('<h')) {
+                    // Check if the title is embedded at the start (common in some exports)
+                    const titleRegex = new RegExp(`^<h[1-6]>${name}</h[1-6]>`, 'i');
+                    d = d.replace(titleRegex, '');
+                    return d;
+                }
+
+                // If it looks like plain text or partial HTML
+                // Remove initial garbage like "&nbsp;ass=..."
+                d = d.replace(/&nbsp;ass="[^"]*">/g, '');
+                d = d.replace(/<span[^>]*>/g, '').replace(/<\/span>/g, '');
+
+                // Decode literal "\n" to actual newlines if present
+                d = d.replace(/\\n/g, '\n');
+
+                // Splitlines
+                let lines = d.split(/\n|<br>|<br\/>/).map(l => l.trim()).filter(l => l);
+
+                // Remove line if it matches the product name (duplicate title)
+                if (lines.length > 0 && lines[0].toLowerCase() === name.toLowerCase()) {
+                    lines.shift();
+                }
+
+                let formatted = '';
+                let inList = false;
+                let hasFeaturesHeader = false;
+                let hasDetailsHeader = false;
+
+                lines.forEach((line, index) => {
+                    // Check common "Features" headers in text
+                    if (line.toLowerCase() === 'features' || line.toLowerCase() === 'features:') {
+                        if (inList) { formatted += '</ul>'; inList = false; }
+                        if (!hasFeaturesHeader) {
+                            formatted += '<h3>Features</h3>';
+                            hasFeaturesHeader = true;
+                        }
+                        return; // Skip adding the line itself
+                    }
+
+                    // Check for bullet points
+                    if (line.startsWith('-') || line.startsWith('•') || line.startsWith('*')) {
+                        if (!inList) {
+                            if (!hasFeaturesHeader) {
+                                formatted += '<h3>Features</h3>';
+                                hasFeaturesHeader = true;
+                            }
+                            formatted += '<ul>';
+                            inList = true;
+                        }
+                        // Remove the bullet char
+                        let listContent = line.substring(1).trim();
+                        if (listContent) formatted += `<li>${listContent}</li>`;
+                    }
+                    // Check for Key: Value patterns (Specifications)
+                    else if (line.includes(':') && line.length < 100 && !line.includes('http') && !line.endsWith(':')) {
+                        if (inList) {
+                            formatted += '</ul>';
+                            inList = false;
+                        }
+
+                        if (!hasDetailsHeader) {
+                            formatted += '<h3>Product Details</h3>';
+                            hasDetailsHeader = true;
+                        }
+
+                        const parts = line.split(':');
+                        const key = parts[0].trim();
+                        const val = parts.slice(1).join(':').trim();
+
+                        formatted += `<div class="spec-row"><strong>${key}:</strong> ${val}</div>`;
+                    }
+                    // Normal text paragraph
+                    else {
+                        if (inList) {
+                            formatted += '</ul>';
+                            inList = false;
+                        }
+                        // If line is just "Product Details" or similar
+                        if (line.toLowerCase().includes('product details') || line.toLowerCase().includes('specifications')) {
+                            // Treat as header check
+                            if (!hasDetailsHeader) {
+                                formatted += '<h3>Product Details</h3>';
+                                hasDetailsHeader = true;
+                            }
+                        } else {
+                            formatted += `<p>${line}</p>`;
+                        }
+                    }
+                });
+
+                if (inList) formatted += '</ul>';
+                return formatted;
+            };
+
+            cleanDescription = formatDescription(cleanDescription);
+
+            // PARSE SPECIFICATIONS (Attributes) when uploading via CSV
+            const specifications = {};
+            // Look for "Attribute X name" and "Attribute X value(s)"
+            // We'll scan up to 20 attributes to be safe
+            for (let i = 1; i <= 20; i++) {
+                const nameKey = getValue([`attribute ${i} name`]);
+                const valKey = getValue([`attribute ${i} value(s)`]);
+
+                if (nameKey && valKey && nameKey.trim() && valKey.trim()) {
+                    specifications[nameKey.trim()] = valKey.trim();
+                }
+            }
 
             if (name && priceVal && !isNaN(parseFloat(priceVal))) {
                 // Handle "In Stock?" column which might say "10" or "In stock"
                 let stockCount = parseInt(stock);
                 if (isNaN(stockCount)) stockCount = 0;
 
+                // Image Fallback:
+                // 1. Try to find valid image in CSV columns
+                let finalImage = image ? image.split(/[,\n;|]/)[0].trim() : '';
+
+                // 2. If no image found, generate a dynamic placeholder with the product name
+                if (!finalImage || finalImage.length < 5) { // <5 to filter out "N/A" or garbage
+                    const shortName = name.split(' ').slice(0, 3).join('+'); // First 3 words
+                    finalImage = `https://placehold.co/600x400/EEE/31343C?font=lora&text=${shortName}`;
+                }
+
                 results.push({
                     name: name,
                     price: parseFloat(priceVal),
-                    description: description || '',
+                    description: cleanDescription,
                     stock: stockCount,
                     sku: sku || `SKU-${Date.now()}-${Math.random()}`,
-                    imageUrl: image ? image.split(',')[0].trim() : '' // Take first image if comma separated
+                    imageUrl: finalImage,
+                    specifications: specifications
                 });
             }
         })

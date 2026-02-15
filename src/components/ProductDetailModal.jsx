@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ProductDetailModal.css';
 
-const ProductDetailModal = ({ product, allProducts, onClose, isPage, onAddToCart, onAddToWishlist, convertPrice }) => {
+const ProductDetailModal = ({ product, allProducts, onClose, isPage, onAddToCart, onAddToWishlist, convertPrice, onNavigateToProduct, onAddToCartAny }) => {
     if (!product) return null;
     const [mainImage, setMainImage] = useState(product.imageUrl);
     const [quantity, setQuantity] = useState(1);
@@ -10,6 +10,8 @@ const ProductDetailModal = ({ product, allProducts, onClose, isPage, onAddToCart
     // Reset quantity when product changes
     React.useEffect(() => {
         setQuantity(1);
+        setMainImage(product.imageUrl);
+        window.scrollTo(0, 0); // Scroll to top when related product is clicked
     }, [product]);
 
     const handleIncrease = () => setQuantity(prev => prev + 1);
@@ -51,7 +53,7 @@ const ProductDetailModal = ({ product, allProducts, onClose, isPage, onAddToCart
                             {images.map((img, idx) => (
                                 <div
                                     key={idx}
-                                    className={`thumbnail ৳{mainImage === img ? 'active' : ''}`}
+                                    className={`thumbnail ${mainImage === img ? 'active' : ''}`}
                                     onClick={() => setMainImage(img)}
                                 >
                                     <img src={img} alt="thumbnail" />
@@ -238,27 +240,58 @@ const ProductDetailModal = ({ product, allProducts, onClose, isPage, onAddToCart
                 {/* RELATED PRODUCTS */}
                 <div className="related-products-section">
                     <h2>You may also like</h2>
-                    <div className="related-grid" style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(4, 1fr)',
-                        gap: '20px',
-                        padding: '20px 40px'
-                    }}>
+                    <div className="product-grid-4">
                         {allProducts && allProducts
                             .filter(p => p.sku !== product.sku) // Exclude current
                             .slice(0, 4) // Take first 4
                             .map((p, idx) => (
-                                <div className="ap-product-card" key={idx} style={{ border: '1px solid #eee' }}>
-                                    <div className="ap-image-wrapper" style={{ height: '200px' }}>
-                                        {p.imageUrl ? (
-                                            <img src={p.imageUrl} alt={p.name} />
-                                        ) : (
-                                            <div style={{ color: '#ccc' }}>No Image</div>
-                                        )}
+                                <div className="product-card-v2" key={idx} onClick={() => onNavigateToProduct && onNavigateToProduct(p)} style={{ cursor: 'pointer' }}>
+                                    <div className="card-image-wrapper">
+                                        <div className="image-container">
+                                            {p.imageUrl ? (
+                                                <img src={p.imageUrl} alt={p.name} />
+                                            ) : (
+                                                <div style={{ width: '100%', height: '100%', background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>No Image</div>
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="ap-info">
-                                        <div className="ap-title" style={{ fontSize: '0.9rem' }} title={p.name}>{p.name}</div>
-                                        <div className="ap-price">{convertPrice(p.price)}</div>
+                                    <div className="card-details">
+                                        <p className="product-title" title={p.name} style={{ minHeight: '60px', fontSize: '0.9rem', lineHeight: '1.4' }}>{p.name}</p>
+                                        <div className="price-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '5px' }}>
+                                            <span className="sale-price" style={{ fontSize: '1.1rem', color: '#d50055' }}>{convertPrice(p.price)}</span>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (onAddToCartAny) onAddToCartAny(p, 1);
+                                                }}
+                                                style={{
+                                                    background: '#000',
+                                                    border: 'none',
+                                                    borderRadius: '50%',
+                                                    cursor: 'pointer',
+                                                    padding: '8px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: '#fff',
+                                                    transition: 'transform 0.2s, background 0.2s',
+                                                    width: '32px',
+                                                    height: '32px'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.transform = 'scale(1.1)';
+                                                    e.currentTarget.style.background = '#d50055';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.transform = 'scale(1)';
+                                                    e.currentTarget.style.background = '#000';
+                                                }}
+                                            >
+                                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}

@@ -497,27 +497,27 @@
 .text-description-container {
     max-width: 900px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 20px;
     text-align: center;
 }
 
 .text-description-container h3 {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: #333;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     line-height: 1.3;
 }
 
 .description-text {
     text-align: left;
     color: #555;
-    line-height: 1.8;
-    font-size: 0.95rem;
+    line-height: 1.6;
+    font-size: 0.9rem;
 }
 
 .description-text p {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 /* Reviews Section Styles */
@@ -564,4 +564,137 @@
     color: #666;
     line-height: 1.6;
     margin: 0;
+}
+
+/* Structured Description Styles */
+.description-tab-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+}
+
+.structured-description h4 {
+    font-size: 0.95rem;
+    /* Slightly smaller but bold per screenshot */
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+    margin-top: 25px;
+    text-transform: none;
+    /* Screenshot titles are sentence case or mixed */
+}
+
+/* Remove margin-top from first h4 (Overview: usually) */
+.sd-overview h4:first-child {
+    margin-top: 0;
+}
+
+/* Overview Section */
+.sd-overview {
+    margin-bottom: 30px;
+}
+
+.sd-overview p {
+    margin-bottom: 15px;
+}
+
+/* Specs List (Brand Name, etc) */
+.sd-specs-list {
+    margin-bottom: 30px;
+}
+
+.sd-label {
+    font-weight: 700;
+    color: #333;
+    margin-right: 5px;
+}
+
+.sd-value {
+    color: #555;
+}
+
+.sd-spec-item {
+    margin-bottom: 5px;
+}
+
+/* Details Grid (Color, Optic, etc) */
+.sd-details-grid {
+    margin-bottom: 30px;
+}
+
+.sd-detail-item {
+    margin-bottom: 20px;
+}
+
+/* Generic Sections (Micro Display, Electrical, etc) */
+.sd-sections {
+    margin-bottom: 25px;
+}
+
+.sd-section h4 {
+    margin-bottom: 8px;
+}
+
+.sd-list {
+    list-style-type: none;
+    /* Screenshot has no bullets */
+    padding-left: 0;
+    margin: 0;
+}
+
+.sd-list li {
+    margin-bottom: 2px;
+    position: relative;
+    padding-left: 0;
+}
+
+/* Matching the screenshot look specifically */
+.structured-description {
+    text-align: left;
+}
+
+/* Dynamically Formatted Description Styles */
+.description-text h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #222;
+    text-align: center;
+    /* Center headers like the screenshot implies for "Features" */
+}
+
+.description-text ul {
+    list-style-type: none;
+    /* Remove default bullets */
+    padding-left: 0;
+    margin-bottom: 20px;
+    text-align: center;
+    /* Center the list items if they are features */
+}
+
+/* If the user wants traditional bullets, remove text-align center and add list-style */
+.description-text li {
+    margin-bottom: 8px;
+    color: #555;
+    position: relative;
+    /* Optional: custom bullet if needed */
+}
+
+/* Spec Rows (Key: Value) */
+.spec-row {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 6px;
+    text-align: center;
+    /* Center based on screenshot look */
+}
+
+.spec-row strong {
+    font-weight: 600;
+    color: #333;
+    margin-right: 5px;
 }

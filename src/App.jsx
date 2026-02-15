@@ -18,9 +18,35 @@ import TermsConditions from './components/TermsConditions';
 
 const App = () => {
   const [products, setProducts] = useState([]);
-  const [view, setView] = useState('home');
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [cartItems, setCartItems] = useState([]);
+  // Retrieve state from local storage or default
+  const [view, setView] = useState(() => localStorage.getItem('app_view') || 'home');
+  const [selectedProduct, setSelectedProduct] = useState(() => {
+    const saved = localStorage.getItem('app_selected_product');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [cartItems, setCartItems] = useState(() => {
+    const saved = localStorage.getItem('app_cart_items');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [productCategory, setProductCategory] = useState(() => localStorage.getItem('app_product_category') || null);
+  const [productVendor, setProductVendor] = useState(() => localStorage.getItem('app_product_vendor') || null);
+
+  // Persistence Effects
+  useEffect(() => { localStorage.setItem('app_view', view); }, [view]);
+  useEffect(() => {
+    if (selectedProduct) localStorage.setItem('app_selected_product', JSON.stringify(selectedProduct));
+    else localStorage.removeItem('app_selected_product');
+  }, [selectedProduct]);
+  useEffect(() => { localStorage.setItem('app_cart_items', JSON.stringify(cartItems)); }, [cartItems]);
+  useEffect(() => {
+    if (productCategory) localStorage.setItem('app_product_category', productCategory);
+    else localStorage.removeItem('app_product_category');
+  }, [productCategory]);
+  useEffect(() => {
+    if (productVendor) localStorage.setItem('app_product_vendor', productVendor);
+    else localStorage.removeItem('app_product_vendor');
+  }, [productVendor]);
+
   const [wishlistCount, setWishlistCount] = useState(0);
   const [lastOrder, setLastOrder] = useState(null);
 
@@ -74,10 +100,61 @@ const App = () => {
     p.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const [productCategory, setProductCategory] = useState(null);
-  const [productVendor, setProductVendor] = useState(null);
+  // Handle browser back/forward buttons
+  useEffect(() => {
+    const handlePopState = (event) => {
+      // If we have state in the history, use it
+      if (event.state) {
+        setView(event.state.view);
+        setSelectedProduct(event.state.selectedProduct || null);
+
+        // Handle optional params
+        // Note: productCategory and setProductCategory would need to be updated 
+        // using the persisted or passed values.
+        // But previously we removed the useState for productCategory in the file view?
+        // Wait, looking at the previous file content (Step 452), lines 31-32 define:
+        // const [productCategory, setProductCategory] = useState(...)
+        // So they exist.
+
+        if (event.state.category !== undefined) setProductCategory(event.state.category);
+        if (event.state.vendor !== undefined) setProductVendor(event.state.vendor);
+        if (event.state.searchQuery !== undefined) setSearchQuery(event.state.searchQuery);
+
+      } else {
+        // Fallback or Initial Load? 
+        // If there's no state, we might rely on the localStorage persistence 
+        // that we just set up. But popstate usually means we went back to a "null" state entry?
+        // Actually, usually the initial entry has no state unless we replaceState on load.
+        // Let's just reload the view from the current persisted storage if null, or default to home.
+        // Simpler: behave like a fresh load, let the localStorage init take over? 
+        // No, popstate doesn't re-run init.
+        // Let's assume hitting "Back" out of our app (if possible) is handled by browser.
+        // If we are IN the app, popping to a null state usually means the initial entry.
+        // Let's try to map the URL hash if possible, or just default.
+        setView('home');
+        setSelectedProduct(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    // Replace current state on initial load
+    window.history.replaceState({
+      view,
+      selectedProduct,
+      category: productCategory,
+      vendor: productVendor,
+      searchQuery
+    }, '');
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []); // Run once on mount
 
   const handleNavigate = (page, category = null, vendor = null) => {
+    // Push new state
+    const newState = { view: page, category, vendor, searchQuery: '' };
+    window.history.pushState(newState, '', `#${page}`);
+
     setView(page);
     window.scrollTo(0, 0);
     setSelectedProduct(null);
@@ -89,6 +166,12 @@ const App = () => {
   };
 
   const showProductDetail = (p) => {
+    // Push new state
+    const newState = { view: 'product-detail', selectedProduct: p };
+    // Safe ID for URL
+    const safeId = p.sku || p.name.replace(/\s+/g, '-').toLowerCase();
+    window.history.pushState(newState, '', `#product/${safeId}`);
+
     setSelectedProduct(p);
     // Switch to full page view for product
     setView('product-detail');
@@ -202,7 +285,7 @@ const App = () => {
 
       {view === 'home' && (
         <>
-          <Hero />
+          <Hero onNavigate={handleNavigate} />
           <section className="featured-section container" style={{ maxWidth: '1300px', margin: '0 auto', padding: '60px 20px', position: 'relative' }}>
             <h2 className="section-heading">FEATURED PRODUCTS</h2>
 
@@ -285,6 +368,8 @@ const App = () => {
             onAddToCart={(qty) => handleAddToCart(selectedProduct, qty)}
             onAddToWishlist={handleAddToWishlist}
             convertPrice={convertPrice}
+            onNavigateToProduct={showProductDetail}
+            onAddToCartAny={handleAddToCart}
           />
         </div>
       )}

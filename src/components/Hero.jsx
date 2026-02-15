@@ -10,7 +10,7 @@ import tradeIn from '../assets/trade_in_promo.png';
 import dailyDeals from '../assets/daily_deals_promo.png';
 import newBanner from '../assets/new.webp';
 
-const Hero = () => {
+const Hero = ({ onNavigate }) => {
     return (
         <section className="hero-section" style={{ maxWidth: '1350px', margin: '0 auto', padding: '25px 25px 40px' }}>
             {/* Top Hero Section */}
@@ -123,11 +123,15 @@ const Hero = () => {
 
                 {/* 2x2 Sub Grid */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: '15px' }}>
-                    <div style={{
-                        backgroundImage: `url(${followUs})`, backgroundSize: 'cover', backgroundPosition: 'center',
-                        borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        textAlign: 'center', padding: '20px', position: 'relative', overflow: 'hidden'
-                    }}>
+                    <div
+                        onClick={() => window.open('https://www.facebook.com/roboxpressbd', '_blank')}
+                        style={{
+                            backgroundImage: `url(${followUs})`, backgroundSize: 'cover', backgroundPosition: 'center',
+                            borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            textAlign: 'center', padding: '20px', position: 'relative', overflow: 'hidden',
+                            cursor: 'pointer'
+                        }}
+                    >
                         <h3 style={{
                             color: 'white', fontSize: '1.3rem', fontWeight: '800', lineHeight: '1.1',
                             textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
@@ -153,11 +157,15 @@ const Hero = () => {
                             textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
                         }}>NX69 $2.50<br />TRADE-IN</h3>
                     </div>
-                    <div style={{
-                        backgroundImage: `url(${dailyDeals})`, backgroundSize: 'cover', backgroundPosition: 'center',
-                        borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        textAlign: 'center', padding: '20px', position: 'relative', overflow: 'hidden'
-                    }}>
+                    <div
+                        onClick={() => onNavigate('daily-deals')}
+                        style={{
+                            backgroundImage: `url(${dailyDeals})`, backgroundSize: 'cover', backgroundPosition: 'center',
+                            borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            textAlign: 'center', padding: '20px', position: 'relative', overflow: 'hidden',
+                            cursor: 'pointer'
+                        }}
+                    >
                         <h3 style={{
                             color: 'white', fontSize: '1.3rem', fontWeight: '800', lineHeight: '1.1',
                             textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'

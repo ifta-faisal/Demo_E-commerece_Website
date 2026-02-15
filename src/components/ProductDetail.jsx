@@ -14,6 +14,65 @@ Hummingbird 305 Stack combines advanced control with unmatched power.
 This stack is built for serious freestyle and long-range missions, featuring the Hummingbird 305 Flight Controller with a high-speed F722 MCU, built-in 2.4GHz ExpressLRS Diversity Receiver, and full support for Betaflight & iNAV firmware. Designed with a TCXO oscillator and barometer, it's ready for precise GPS navigation and auto-return missions.
 
 Matched with the Hummingbird 305 4in1 ESC, this power system supports up to 80A continuous for 10 seconds and 100A burst for 3 seconds per channel on 3-8S LiPo, delivering insane performance with robust protection. The ESC features 3oz 6-layer gold-plated PCB with blind vias, AT32F421 MCU + integrated Gate Driver, and 3x massive onboard TVS diodes, eliminating the need for external surge protection.`,
+            structuredDescription: {
+                overview: [
+                    "The Hummingbird line of flight stacks are a great entry level FPV system. They are simple, affordable, and have an ultra-immersive performance. The Hummingbird 305 has an integrated four band, 32-channel receiver, and USB charging. It puts ease-of-use first and lets pilots focus on the full FPV experience without worrying about extra charging cables or accessory components.",
+                    "Version 3 of the Hummingbird Stack is a very mature design. It has an included onboard DVR, uses an integrated channel scanner to pick up the strongest video feed and has an improved 800 x 480 TFT resolution display for a crisper image. The onboard OSD shows video signal strength, battery lifetime, and selected channel. The Hummingbird 305 is the ideal choice for a new pilot looking for a complete, high-quality headset."
+                ],
+                specifications: {
+                    "Brand Name": "Hummingbird",
+                    "Item Name": "305 Flight Stack",
+                    "Item NO.": "HB-305-V3"
+                },
+                details: [
+                    { label: "Color", value: "Black and Gold" },
+                    { label: "Optic", value: "" },
+                    { label: "FOV (field of view)", value: "N/A" },
+                    { label: "Format", value: "N/A" }
+                ],
+                sections: [
+                    {
+                        title: "Micro Display:",
+                        items: [
+                            "Display: WQVGA 4.3 inch display",
+                            "Resolution: 800 X 480 TFT"
+                        ]
+                    },
+                    {
+                        title: "Electrical:",
+                        items: [
+                            "DVR: Analog video recording",
+                            "SD card support to 32GB (AVI file)",
+                            "Support playback recording file",
+                            "Firmware upgrade via SD card"
+                        ]
+                    },
+                    {
+                        title: "Wireless Receiver:",
+                        content: "40 channels, single high sensitive receiver including RaceBand frequencies(auto scan and find strongest channel)"
+                    },
+                    {
+                        title: "OSD:",
+                        content: "Channel info, RSSI info and battery status (disappear after 4s, press any button to show up)"
+                    },
+                    {
+                        title: "Interfaces:",
+                        items: [
+                            "USB charge port",
+                            "Micro-SD card slot"
+                        ]
+                    },
+                    {
+                        title: "Package Included:",
+                        items: [
+                            "1x Hummingbird 305 FC",
+                            "1x Hummingbird 80A ESC",
+                            "1x XT60 Pigtail",
+                            "1x 18650 2600mAh Li-ion Battery(built-in headset)"
+                        ]
+                    }
+                ]
+            },
             features: [
                 { img: "https://placehold.co/1200x600/111111/ff9900?text=Hummingbird+305+Stack+Features", alt: "Feature Banner" },
                 { img: "https://placehold.co/1200x500/222222/ffffff?text=80A+Continuous+Current+Support", alt: "Amps Feature" },
@@ -106,6 +165,7 @@ Priced at just $99, this stack shatters expectations, offering elite-level perfo
 
     // Merge rich description back into activeProduct for display
     activeProduct.description = richContent.description;
+    activeProduct.structuredDescription = richContent.structuredDescription;
 
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState('description'); // 'description', 'specification', 'reviews'
@@ -244,74 +304,59 @@ Priced at just $99, this stack shatters expectations, offering elite-level perfo
 
                     {/* Description Tab Content */}
                     {activeTab === 'description' && (
-                        <>
-                            {/* Plain Text Description (Moved to Top) */}
-                            <div className="text-description-container">
-                                <h3>{activeProduct.title}</h3>
-                                <div className="description-text">
-                                    {activeProduct.description && activeProduct.description.split('\n\n').map((paragraph, idx) => (
-                                        <p key={idx}>{paragraph}</p>
-                                    ))}
-                                </div>
-                            </div>
+                        <div className="description-tab-content">
+                            {/* Structured Description Layout */}
+                            {activeProduct.structuredDescription ? (
+                                <div className="structured-description">
+                                    <div className="sd-overview">
+                                        <h4>Overview:</h4>
+                                        {activeProduct.structuredDescription.overview.map((p, i) => (
+                                            <p key={i}>{p}</p>
+                                        ))}
+                                    </div>
 
-                            {/* Dynamic Feature Banners */}
-                            {richContent.features.map((feat, idx) => (
-                                <div className="feature-section-dark" key={idx}>
-                                    <div className="feature-image-full">
-                                        <img src={feat.img} alt={feat.alt} />
+                                    <div className="sd-specs-list">
+                                        <h4>Specifications:</h4>
+                                        {Object.entries(activeProduct.structuredDescription.specifications).map(([key, val]) => (
+                                            <div key={key} className="sd-spec-item">
+                                                <span className="sd-label">{key}:</span> <span className="sd-value">{val}</span>
+                                            </div>
+                                        ))}
                                     </div>
-                                </div>
-                            ))}
 
-                            {/* Diagrams Section (Red/Orange vertical banners) */}
-                            <div className="diagrams-section">
-                                <div className="diagram-row">
-                                    <div className="diagram-sidebar-red">
-                                        <span>FLIGHT CONTROLLER</span>
+                                    <div className="sd-details-grid">
+                                        {activeProduct.structuredDescription.details.map((detail, i) => (
+                                            <div key={i} className="sd-detail-item">
+                                                <span className="sd-label">{detail.label}:</span>
+                                                {detail.value && <span className="sd-value"> {detail.value}</span>}
+                                            </div>
+                                        ))}
                                     </div>
-                                    <div className="diagram-content">
-                                        <img src="https://placehold.co/800x600/ffffff/333333?text=FC+Wiring+Diagram" alt="Wiring Diagram" />
-                                    </div>
-                                </div>
-                                <div className="diagram-row">
-                                    <div className="diagram-sidebar-red">
-                                        <span>ESC WIRING</span>
-                                    </div>
-                                    <div className="diagram-content">
-                                        <img src="https://placehold.co/800x600/ffffff/333333?text=ESC+Wiring+Diagram" alt="ESC Diagram" />
-                                    </div>
-                                </div>
-                            </div>
 
-                            {/* Video Reviews Section */}
-                            <div className="video-section">
-                                <h2>Featured Reviews</h2>
-                                <div className="video-grid">
-                                    <div className="video-card">
-                                        <div className="video-thumbnail">
-                                            <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Video Review 1" />
-                                            <div className="play-button">▶</div>
-                                        </div>
-                                        <h4>THE BEST 3" BNF... PERIOD.</h4>
-                                    </div>
-                                    <div className="video-card">
-                                        <div className="video-thumbnail">
-                                            <img src="https://img.youtube.com/vi/calc/hqdefault.jpg" alt="Video Review 2" onError={(e) => e.target.src = 'https://placehold.co/400x250/000000/ffffff?text=Video+Review+2'} />
-                                            <div className="play-button">▶</div>
-                                        </div>
-                                        <h4>NEWBEEDRONE PRODUCT REVIEW</h4>
-                                    </div>
-                                    <div className="video-card">
-                                        <div className="video-thumbnail">
-                                            <img src="https://placehold.co/400x250/333333/ffffff?text=Frame+Review" alt="Video Review 3" />
-                                            <div className="play-button">▶</div>
-                                        </div>
-                                        <h4>In-Depth Frame Analysis</h4>
+                                    <div className="sd-sections">
+                                        {activeProduct.structuredDescription.sections.map((section, i) => (
+                                            <div key={i} className="sd-section">
+                                                <h4>{section.title}</h4>
+                                                {section.items ? (
+                                                    <ul className="sd-list">
+                                                        {section.items.map((item, j) => (
+                                                            <li key={j}>{item}</li>
+                                                        ))}
+                                                    </ul>
+                                                ) : (
+                                                    <p>{section.content}</p>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                            </div>
-                        </>
+                            ) : (
+                                /* Fallback to old description if no structured data */
+                                <div className="text-description-container">
+                                    <div className="description-text" dangerouslySetInnerHTML={{ __html: activeProduct.description }} />
+                                </div>
+                            )}
+                        </div>
                     )}
 
                     {/* Specification Tab Content */}
@@ -319,23 +364,27 @@ Priced at just $99, this stack shatters expectations, offering elite-level perfo
                         <>
                             {/* Specs Table Section */}
                             <div className="specs-section">
-                                <h2>Flight Controller</h2>
+                                <h2>Technical Details</h2>
                                 <table className="specs-table">
                                     <tbody>
-                                        {richContent.specsFC.map((row, i) => (
-                                            <tr key={i}><td>{row.k}</td><td>{row.v}</td></tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div className="specs-section">
-                                <h2>ESC</h2>
-                                <table className="specs-table">
-                                    <tbody>
-                                        {richContent.specsESC.map((row, i) => (
-                                            <tr key={i}><td>{row.k}</td><td>{row.v}</td></tr>
-                                        ))}
+                                        {/* Prefer CSV attributes if available */}
+                                        {activeProduct.specifications && Object.keys(activeProduct.specifications).length > 0 ? (
+                                            Object.entries(activeProduct.specifications).map(([k, v], i) => (
+                                                <tr key={i}><td>{k}</td><td>{v}</td></tr>
+                                            ))
+                                        ) : activeProduct.structuredDescription && activeProduct.structuredDescription.specifications ? (
+                                            /* If we have structured manual data (e.g. for demo item) */
+                                            Object.entries(activeProduct.structuredDescription.specifications).map(([k, v], i) => (
+                                                <tr key={i}><td>{k}</td><td>{v}</td></tr>
+                                            ))
+                                        ) : (
+                                            /* Fallback to basic info if nothing else */
+                                            <>
+                                                <tr><td>Brand</td><td>{activeProduct.vendor || 'N/A'}</td></tr>
+                                                <tr><td>SKU</td><td>{activeProduct.sku || 'N/A'}</td></tr>
+                                                <tr><td>Category</td><td>{activeProduct.category || 'N/A'}</td></tr>
+                                            </>
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
